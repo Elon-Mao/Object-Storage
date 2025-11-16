@@ -62,10 +62,10 @@ function OrderSummary({
   itemPrices
 }) {
   return (
-    `<div>
+    <div>
       <h2>Order Summary</h2>
       <!-- rendering logic -->
-    </div>`
+    </div>
   );
 }
 
@@ -277,3 +277,4 @@ export default function UserSearch({ keyword }) {
   );
 }
 ```
+
