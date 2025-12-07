@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Category Cards</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    }
+
+    body {
+      background: #f5f5f5;
+      padding: 40px;
+    }
+
+    /* 外层区域 */
+    .category-block {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 24px 24px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    .category-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* 卡片列表 */
+    .card-list {
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+
+    .app-card {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 260px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 0 1px #e5e5e5;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    /* NEW 斜角标签 */
+    .ribbon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 70px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .ribbon span {
+      position: absolute;
+      display: block;
+      width: 80px;
+      background: #ff6b6b;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      transform: rotate(-45deg);
+      transform-origin: 0 0;
+      top: 10px;
+      left: -20px;
+      padding: 3px 0;
+    }
+
+    /* 图标 */
+    .app-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      background: #9b8cfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    /* 文本区域 */
+    .app-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .app-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-name {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #ffe9c2;
+      color: #ff922b;
+    }
+
+    .badge.beta {
+      background: #e6fcf5;
+      color: #20c997;
+      border: 1px solid #20c997;
+    }
+
+    .installed {
+      font-size: 12px;
+      color: #1677ff;
+    }
+
+    .app-desc {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 960px) {
+      .card-list {
+        flex-wrap: wrap;
+      }
+      .app-card {
+        flex: 1 1 calc(50% - 16px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-card {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="category-block">
+    <div class="category-title">《&lt;Category&gt;》</div>
+
+    <div class="card-list">
+      <!-- 卡片 1 -->
+      <div class="app-card">
+        <div class="ribbon">
+          <span>NEW</span>
+        </div>
+        <div class="app-icon">✦</div>
+        <div class="app-content">
+          <div class="app-title-row">
+            <div class="app-name">《&lt;App Name&gt;》</div>
+            <span class="badge">P</span>
+            <span class="badge beta">BETA</span>
+          </div>
+          <div class="installed">Installed</div>
+          <div class="app-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do…
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片 2 -->
+      <div class="app-card">
+        <div class="ribbon">
+          <span>NEW</span>
+        </div>
+        <div class="app-icon">✦</div>
+        <div class="app-content">
+          <div class="app-title-row">
+            <div class="app-name">《&lt;App Name&gt;》</div>
+            <span class="badge">P</span>
+            <span class="badge beta">BETA</span>
+          </div>
+          <div class="installed">Installed</div>
+          <div class="app-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do…
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片 3 -->
+      <div class="app-card">
+        <div class="ribbon">
+          <span>NEW</span>
+        </div>
+        <div class="app-icon">✦</div>
+        <div class="app-content">
+          <div class="app-title-row">
+            <div class="app-name">《&lt;App Name&gt;》</div>
+            <span class="badge">P</span>
+            <span class="badge beta">BETA</span>
+          </div>
+          <div class="installed">Installed</div>
+          <div class="app-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do…
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

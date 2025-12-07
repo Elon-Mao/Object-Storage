@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Promotion Layout</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    }
+
+    body {
+      background: #f5f5f5;
+      padding: 40px;
+    }
+
+    /* 外层容器 */
+    .promotion {
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 标题 */
+    .promotion-title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    /* 顶部信息区 */
+    .promotion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    /* 左侧 App 信息 */
+    .app-info {
+      display: flex;
+      gap: 16px;
+      min-width: 260px;
+    }
+
+    .app-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      background: #9b8cfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .app-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .app-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #eae5ff;
+      color: #6b5cff;
+    }
+
+    .beta {
+      border: 1px solid #20c997;
+      color: #20c997;
+      background: #e6fcf5;
+    }
+
+    .app-sub {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .installed {
+      color: #1677ff;
+      margin-left: 6px;
+      cursor: pointer;
+    }
+
+    /* 右侧描述 */
+    .description {
+      flex: 1;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* 图片轮播区 */
+    .carousel-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 16px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .card {
+      flex: 0 0 32%;
+      height: 160px;
+      border-radius: 8px;
+      background: #a8d672;
+    }
+
+    /* 左右箭头 */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .arrow.left {
+      left: -16px;
+    }
+
+    .arrow.right {
+      right: -16px;
+    }
+
+    /* 指示点 */
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+
+    .dot.active {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="promotion">
+    <div class="promotion-title">《Promotion Title》</div>
+
+    <div class="promotion-header">
+      <div class="app-info">
+        <div class="app-icon">✦</div>
+        <div class="app-meta">
+          <div class="app-name">
+            《App Name》
+            <span class="badge">P</span>
+            <span class="badge beta">BETA</span>
+          </div>
+          <div class="app-sub">
+            《Category》
+            <span class="installed">Installed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
+
+    <div class="carousel-wrapper">
+      <div class="arrow left">‹</div>
+
+      <div class="carousel">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+
+      <div class="arrow right">›</div>
+    </div>
+
+    <div class="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+</body>
+</html>
