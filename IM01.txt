@@ -1,0 +1,119 @@
+[Scenario 1 | Mentor checks onboarding progress]
+A: Hey, how’s it going with the React codebase so far?
+B: Pretty good, still getting familiar with the structure.
+A: Totally normal.
+B: The components folder is a bit dense though.
+A: Yeah, it takes some time.
+B: I’m reading through the main container now.
+A: Great, that’s a good starting point.
+B: Let me know if I’m missing anything important.
+A: Will do.
+B: Thanks!
+
+[Scenario 2 | Explaining component splitting]
+A: Quick question — do you understand why we split this component?
+B: Kind of, but I’m not fully sure.
+A: No worries.
+B: Is it mainly for reusability?
+A: Exactly, and also readability.
+B: That makes sense.
+A: You’ll see this pattern a lot here.
+B: Got it.
+A: Feel free to ask anytime.
+B: Appreciate it.
+
+[Scenario 3 | Code style guidance]
+A: Hey, I left a few comments on your PR.
+B: Yeah, I saw them.
+A: Mostly about naming and hooks usage.
+B: Got it, I’ll clean that up.
+A: No rush, just follow the team style.
+B: Sure.
+A: Overall, the logic looks solid.
+B: Glad to hear that.
+A: Ping me when you update it.
+B: Will do.
+
+[Scenario 4 | Explaining useEffect dependencies]
+A: I noticed you’re unsure about the dependency array.
+B: Yeah, I’m afraid of breaking something.
+A: That’s very common.
+B: How do you usually decide what goes in there?
+A: Think about what should trigger the effect.
+B: Okay.
+A: If it’s used inside, it probably belongs there.
+B: That helps.
+A: We can refactor it together later.
+B: Sounds good.
+
+[Scenario 5 | New hire asks for help]
+A: Hey, do you have a minute?
+B: Sure, what’s up?
+A: I’m stuck on this state update.
+B: Which part?
+A: The async logic inside the handler.
+B: Okay, let’s walk through it.
+A: Thanks.
+B: You’re actually very close.
+A: That’s reassuring.
+B: We’ll fix it quickly.
+
+[Scenario 6 | Task assignment and expectations]
+A: For this ticket, just focus on the UI part.
+B: No backend changes, right?
+A: Correct.
+B: Should I reuse existing components?
+A: Yes, whenever possible.
+B: Got it.
+A: Don’t worry about edge cases yet.
+B: Okay.
+A: We’ll review it together.
+B: Sounds great.
+
+[Scenario 7 | Encouraging questions]
+A: By the way, don’t hesitate to ask questions.
+B: I was worried about interrupting.
+A: Not at all.
+B: Good to know.
+A: Everyone here went through the same phase.
+B: That’s comforting.
+A: Questions are actually encouraged.
+B: I’ll keep that in mind.
+A: Cool.
+B: Thanks for saying that.
+
+[Scenario 8 | Positive feedback after code review]
+A: Nice job on the refactor.
+B: Thanks!
+A: The logic is much clearer now.
+B: I tried to keep it simple.
+A: And it shows.
+B: Glad it works.
+A: Just one minor tweak left.
+B: Sure.
+A: Overall, great progress.
+B: Appreciate the feedback.
+
+[Scenario 9 | Explaining overall project architecture]
+A: Let me give you a quick overview of the app.
+B: That would help a lot.
+A: We separate features by domain.
+B: Okay.
+A: Shared logic goes into hooks.
+B: Makes sense.
+A: Pages are mostly composition layers.
+B: Got it.
+A: You’ll get used to it fast.
+B: Looking forward to it.
+
+[Scenario 10 | Wrapping up mentorship]
+A: Alright, I think that covers it for today.
+B: Yeah, that was really helpful.
+A: Try applying this in your next task.
+B: I will.
+A: We’ll review again tomorrow.
+B: Sounds good.
+A: Message me if you get stuck.
+B: Sure.
+A: Good work today.
+B: Thanks!
