@@ -1,0 +1,223 @@
+/* scripts/find-unused-vars.cjs */
+const fs = require("fs");
+const path = require("path");
+const { Project, SyntaxKind, Node } = require("ts-morph");
+
+// ========= 配置区：按你的项目改 =========
+const OUT_FILE = path.resolve(process.cwd(), "unused-vars.json");
+
+// 扫描范围（你也可以改成 "src/**/*.js" 等）
+const INCLUDE_GLOBS = [
+  "**/*.js",
+  "**/*.jsx",
+];
+
+// 排除（按需增删）
+const EXCLUDE_GLOBS = [
+  "**/node_modules/**",
+  "**/dist/**",
+  "**/build/**",
+  "**/coverage/**",
+  "**/.next/**",
+  "**/out/**",
+  "**/*.min.js",
+];
+// =======================================
+
+function isExcluded(filePath) {
+  return EXCLUDE_GLOBS.some((g) => filePath.includes(g.replace(/\*\*/g, "")));
+}
+
+/**
+ * 从解构/普通声明中提取所有 Identifier（变量名）
+ * 支持：
+ *   const a = 1;
+ *   const {a, b: bb, c = 1, ...rest} = obj;
+ *   const [x, , y] = arr;
+ */
+function getBindingIdentifiers(bindingName) {
+  /** @type {import("ts-morph").Identifier[]} */
+  const ids = [];
+
+  const walk = (n) => {
+    if (!n) return;
+    if (Node.isIdentifier(n)) {
+      ids.push(n);
+      return;
+    }
+    // Binding patterns / other nodes: 递归找 Identifier
+    for (const d of n.getDescendants()) {
+      if (Node.isIdentifier(d)) ids.push(d);
+    }
+  };
+
+  walk(bindingName);
+  // 去重（同一节点可能被重复收集）
+  const seen = new Set();
+  return ids.filter((id) => {
+    const key = `${id.getSourceFile().getFilePath()}::${id.getStart()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+/**
+ * 判断一个 identifier 是否“未使用”
+ * 逻辑：references 中除去声明处本身，如果没有其它引用 => 未使用
+ */
+function isIdentifierUnused(identifier) {
+  // findReferencesAsNodes() 会包含声明点与使用点
+  const refs = identifier.findReferencesAsNodes();
+
+  // 声明点（identifier 自己）
+  const declStart = identifier.getStart();
+
+  // 过滤掉声明点本身
+  const usage = refs.filter((n) => n.getStart() !== declStart);
+
+  return usage.length === 0;
+}
+
+function getLineCol(node) {
+  const sf = node.getSourceFile();
+  const pos = sf.getLineAndColumnAtPos(node.getStart());
+  return { line: pos.line, col: pos.column };
+}
+
+/**
+ * 尝试判断这个变量是否“导出”(export)
+ * JS 中可能是 `export const a = ...`（ESM）；
+ * CommonJS 的 module.exports 很难静态可靠判断，这里只覆盖 ESM export 关键字场景。
+ */
+function isExportedFromDeclaration(identifier) {
+  // 向上找 VariableStatement 或 FunctionDeclaration 等带 export 修饰符的节点
+  const vs = identifier.getFirstAncestorByKind(SyntaxKind.VariableStatement);
+  if (vs) return vs.isExported?.() === true;
+
+  const fn = identifier.getFirstAncestorByKind(SyntaxKind.FunctionDeclaration);
+  if (fn) return fn.isExported?.() === true;
+
+  // import 的变量不算 export
+  return false;
+}
+
+function main() {
+  const project = new Project({
+    // JS 项目关键：允许解析 JS
+    compilerOptions: {
+      allowJs: true,
+      checkJs: false, // 只做引用分析，不做类型检查
+      jsx: 2,         // React JSX 支持（2=Preserve）
+      target: 99,     // ESNext
+      module: 99,     // ESNext
+    },
+    skipAddingFilesFromTsConfig: true,
+  });
+
+  // 加入文件
+  project.addSourceFilesAtPaths(INCLUDE_GLOBS);
+
+  // 删除排除项
+  const sourceFiles = project.getSourceFiles().filter((sf) => {
+    const fp = sf.getFilePath();
+    return !isExcluded(fp);
+  });
+
+  /** @type {Array<any>} */
+  const results = [];
+
+  for (const sf of sourceFiles) {
+    const filePath = sf.getFilePath();
+
+    // 1) 变量声明：const/let/var（含解构）
+    const varDecls = sf.getDescendantsOfKind(SyntaxKind.VariableDeclaration);
+
+    for (const decl of varDecls) {
+      const nameNode = decl.getNameNode(); // 可能是 Identifier，也可能是 BindingPattern
+      const ids = getBindingIdentifiers(nameNode);
+
+      for (const id of ids) {
+        // 跳过一些明显不是变量名的 Identifier（极少情况）
+        if (!id.getText() || id.getText() === "undefined") continue;
+
+        const unused = isIdentifierUnused(id);
+        if (!unused) continue;
+
+        const { line, col } = getLineCol(id);
+
+        results.push({
+          file: filePath,
+          line,
+          col,
+          name: id.getText(),
+          kind: "variable",
+          exported: isExportedFromDeclaration(id),
+          reason: "No references found outside its declaration (static analysis).",
+        });
+      }
+    }
+
+    // 2) import 绑定（ESM）：import x / import {a as b} / import * as ns
+    const importDecls = sf.getImportDeclarations();
+    for (const imp of importDecls) {
+      const defaultImport = imp.getDefaultImport();
+      if (defaultImport && isIdentifierUnused(defaultImport)) {
+        const { line, col } = getLineCol(defaultImport);
+        results.push({
+          file: filePath,
+          line,
+          col,
+          name: defaultImport.getText(),
+          kind: "import",
+          exported: false,
+          reason: "Unused default import binding.",
+        });
+      }
+
+      const nsImport = imp.getNamespaceImport();
+      if (nsImport && isIdentifierUnused(nsImport)) {
+        const { line, col } = getLineCol(nsImport);
+        results.push({
+          file: filePath,
+          line,
+          col,
+          name: nsImport.getText(),
+          kind: "import",
+          exported: false,
+          reason: "Unused namespace import binding.",
+        });
+      }
+
+      for (const spec of imp.getNamedImports()) {
+        // 用 alias 名（如果有），否则用 name
+        const alias = spec.getAliasNode();
+        const nameNode = alias ?? spec.getNameNode();
+        if (nameNode && isIdentifierUnused(nameNode)) {
+          const { line, col } = getLineCol(nameNode);
+          results.push({
+            file: filePath,
+            line,
+            col,
+            name: nameNode.getText(),
+            kind: "import",
+            exported: false,
+            reason: "Unused named import binding.",
+          });
+        }
+      }
+    }
+  }
+
+  // 排序：先文件再行号
+  results.sort((a, b) => {
+    if (a.file !== b.file) return a.file.localeCompare(b.file);
+    if (a.line !== b.line) return a.line - b.line;
+    return a.col - b.col;
+  });
+
+  fs.writeFileSync(OUT_FILE, JSON.stringify({ generatedAt: new Date().toISOString(), items: results }, null, 2), "utf8");
+  console.log(`✅ Found ${results.length} unused variables. Wrote: ${OUT_FILE}`);
+}
+
+main();
